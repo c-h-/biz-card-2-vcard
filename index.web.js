@@ -8,6 +8,9 @@ import {
   AppRegistry,
 } from 'react-native';
 
+import 'whatwg-fetch'; // enable fetch
+import './js/libs/gapi';
+
 import ClientApp from './js/components/ClientApp';
 
 AppRegistry.registerComponent('UniversalNativeBoilerplate', () => ClientApp);

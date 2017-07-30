@@ -28,7 +28,7 @@ module.exports = {
     },
   },
   entry: {
-    application: path.join(process.cwd(), 'index.web.js'),
+    application: ['whatwg-fetch', path.join(process.cwd(), 'index.web.js')],
     // libraries that don't change often and should be bundled externally
     vendor: [
       'react',
