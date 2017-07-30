@@ -67,11 +67,11 @@ class AppFrame extends Component {
       <View
         style={styles.container}
       >
-        <CustomTabBar
+        {/* <CustomTabBar
           navigation={navigation}
           router={router}
           tabBarOptions={tabBarOptions}
-        />
+        /> */}
         <SceneContainer>
           <Scene navigation={childNavigation} />
         </SceneContainer>
