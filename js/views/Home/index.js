@@ -4,6 +4,7 @@ import React, {
 import styled from 'styled-components/primitives';
 
 import Webcam from './components/Webcam';
+import Cards from './components/Cards';
 
 const Container = styled.View`
   flex: 1;
@@ -16,6 +17,7 @@ const Home = () => {
   return (
     <Container>
       <Webcam />
+      <Cards />
     </Container>
   );
 };

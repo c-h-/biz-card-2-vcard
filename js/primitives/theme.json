@@ -1,0 +1,17 @@
+{
+  "primary": "#0396FF",
+  "primaryLight": "#ABDCFF",
+  "secondary": "#F8D800",
+  "secondaryLight": "#FDEB71",
+  "emphasis": "blue",
+  "warn": "yellow",
+  "danger": "red",
+  
+  "text": "#111",
+  "textInverted": "#fff",
+  "font": "Roboto",
+  "weight": "600",
+
+  "pad": "15px",
+  "unit": 15
+}

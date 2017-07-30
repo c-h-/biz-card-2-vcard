@@ -1,47 +1,45 @@
 import React, {
+  PropTypes,
   PureComponent,
 } from 'react';
 import Webcam from 'react-webcam';
-import styled from 'styled-components/primitives';
 import { View } from 'react-native';
+import { connect } from 'react-redux';
 
 import ocr from '../../../libs/ocr';
 import { analyze } from '../../../libs/gapi_entity';
+import { saveCard } from '../actions';
 
-const Text = styled.Text`
-  font-size: 16px;
-`;
-
-const Button = styled.Touchable`
-  padding: 10px;
-  border: 2px solid blue;
-  margin: 10px;
-  font-size: 20px;
-  color: blue;
-`;
+import Text from '../../../primitives/Text';
+import Button from '../../../primitives/Button';
 
 const states = {
   NEED_PERMISSION: 0,
   READY: 1,
   SELECT_STREAM: 2,
   PROCESSING: 3, // reshaping image
-  UPLOADING: 4, // Uploading to OCR Space
-  ANALYZING: 5, // G API Analysis
+  UPLOADING: 4,  // Uploading to OCR Space
+  ANALYZING: 5,  // G API Analysis
   ERROR: 6,
 };
 
 class WebcamContainer extends PureComponent {
+  static propTypes = {
+    dispatch: PropTypes.func,
+  }
   state = {
     status: states.NEED_PERMISSION,
     devices: [],
     audioDevices: [],
     selectedDevice: null,
     errMsg: null,
+    meta: {},
   }
   componentWillMount() {
     if (typeof navigator !== 'undefined') {
       navigator.mediaDevices.enumerateDevices()
         .then((devices) => {
+          console.log('Found devices', devices);
           const videoSources = devices.filter(device => device.kind === 'videoinput');
           this.setState({
             status: videoSources.length > 1
@@ -54,10 +52,15 @@ class WebcamContainer extends PureComponent {
     }
   }
   receiveStream = () => this.setState({ status: states.READY })
-  analyzeText = ({ ...args }) => {
+  analyzeText = (OCRResults) => {
     // analyze OCR text
-    analyze(...args)
-      .then(() => {
+    analyze(OCRResults)
+      .then((entities) => {
+        console.log('Got stuff', entities);
+        this.props.dispatch(saveCard({
+          ...this.state.meta,
+          entities,
+        }));
         this.setState({
           status: states.READY,
         });
@@ -65,7 +68,7 @@ class WebcamContainer extends PureComponent {
       .catch((err) => {
         this.setState({
           status: states.ERROR,
-          errMsg: 'Analysis error.',
+          errMsg: typeof err === 'string' ? err : 'Analysis error.',
         });
       });
   }
@@ -74,6 +77,9 @@ class WebcamContainer extends PureComponent {
     const base64Image = this.webcam.getScreenshot();
     this.setState({
       status: states.UPLOADING,
+      meta: { // reset meta
+        base64Image,
+      },
     }, () => {
       // call ocr after completing state change
       ocr(base64Image)
@@ -88,7 +94,13 @@ class WebcamContainer extends PureComponent {
             else {
               this.setState({
                 status: states.ANALYZING,
-              }, this.analyzeText);
+                meta: {
+                  ...this.state.meta,
+                  ocrResults: results,
+                },
+              }, () => {
+                this.analyzeText(results);
+              });
             }
           }
           else {
@@ -205,7 +217,13 @@ class WebcamContainer extends PureComponent {
                     onPress={this.selectStream(device.deviceId)}
                     key={device.deviceId}
                   >
-                    <Text>{`Video Input ${i}`}</Text>
+                    <Text>
+                      {
+                        device.label.length
+                        ? device.label
+                        : `Video Input ${i + 1}`
+                      }
+                    </Text>
                   </Button>
                 );
               })
@@ -217,4 +235,4 @@ class WebcamContainer extends PureComponent {
   }
 }
 
-export default WebcamContainer;
+export default connect(() => ({}))(WebcamContainer);
