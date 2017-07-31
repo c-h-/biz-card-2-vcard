@@ -1,6 +1,6 @@
 {
-  "name": "universal-native-boilerplate",
-  "version": "0.0.1",
+  "name": "biz-card-to-vcard",
+  "version": "1.0.0",
   "author": "Charlie Hulcher",
   "private": true,
   "scripts": {
@@ -40,7 +40,7 @@
     "redux-persist": "^4.3.0",
     "redux-thunk": "^2.2.0",
     "styled-components": "^2.1.1",
-    "vcards-js": "^2.6.0",
+    "vcards-js": "https://github.com/c-h-/vCards-js.git",
     "whatwg-fetch": "^2.0.3"
   },
   "devDependencies": {

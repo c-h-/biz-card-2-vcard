@@ -57,7 +57,7 @@ const Button = ({
         <Icon
           name={icon}
           color={getColor(passProps, true)}
-          style={{ marginRight: theme.unit / 2 }}
+          style={{ marginRight: children ? theme.unit / 2 : 0 }}
         />
       }
       <StyledText {...passProps}>

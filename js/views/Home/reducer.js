@@ -16,12 +16,21 @@ export default function home(state = initState, action) {
         ...action.payload.home,
       };
     }
+    case ActionTypes.REMOVE_CARD: {
+      return {
+        ...state,
+        cards: state.cards.filter(card => card.id !== action.payload.id),
+      };
+    }
     case ActionTypes.SAVE_CARD: {
       return {
         ...state,
         cards: [
           ...state.cards,
-          action.payload,
+          {
+            ...action.payload,
+            id: `${new Date().getTime()}${Math.floor(Math.random() * 1e3)}`
+          },
         ],
       };
     }

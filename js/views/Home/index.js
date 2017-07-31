@@ -6,16 +6,17 @@ import styled from 'styled-components/primitives';
 import Webcam from './components/Webcam';
 import Cards from './components/Cards';
 
+import Header from '../../primitives/Header';
+
 const Container = styled.View`
-  flex: 1;
-  justifyContent: center;
-  alignItems: center;
   backgroundColor: #F5FCFF;
+  padding: 20px;
 `;
 
 const Home = () => {
   return (
     <Container>
+      <Header>Business Card Scanner</Header>
       <Webcam />
       <Cards />
     </Container>

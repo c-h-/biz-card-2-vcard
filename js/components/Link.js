@@ -1,4 +1,4 @@
-import React, {
+  import React, {
   PropTypes,
   Component,
 } from 'react';
@@ -42,17 +42,19 @@ class Link extends Component {
       e.preventDefault();
     }
     const {
-      dispatch,
-    } = this.context.store;
+      store,
+    } = this.context;
     const action = this.getAction();
     if (action) {
-      dispatch(action);
+      if (action.routeName.includes('://') && typeof window !== 'undefined') {
+        window.open(action.routeName, '_blank');
+      }
+      else {
+        store.dispatch(action);
+      }
     }
   }
   render() {
-    const {
-      getURIForAction,
-    } = this.context;
     const {
       children,
       style,
@@ -79,7 +81,7 @@ class Link extends Component {
       // see https://github.com/necolas/react-native-web/issues/65
       CompToRender = Text;
       extraProps.accessibilityRole = 'link';
-      extraProps.href = getURIForAction(this.getAction());
+      extraProps.href = (this.getAction() || {}).routeName;
     }
     return (
       <CompToRender

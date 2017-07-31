@@ -8,3 +8,12 @@ export function saveCard(data = {}) {
     },
   };
 }
+
+export function removeCard(id) {
+  return {
+    type: ActionTypes.REMOVE_CARD,
+    payload: {
+      id,
+    },
+  };
+}

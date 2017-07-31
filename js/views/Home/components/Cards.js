@@ -1,18 +1,42 @@
-import React, { PureComponent } from 'react';
+import React, { PropTypes, Component } from 'react';
 import { connect } from 'react-redux';
+import styled from 'styled-components/primitives';
 
-import Text from '../../../primitives/Text';
+import Card from '../../../primitives/Card';
 
-class Cards extends PureComponent {
+const CardsContainer = styled.View`
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: flex-start;
+`;
+
+class Cards extends Component {
+  static propTypes = {
+    cards: PropTypes.array,
+  }
   render() {
+    const {
+      cards,
+    } = this.props;
     return (
-      <Text>Cards</Text>
+      <CardsContainer>
+        {
+          cards.map((card, i) => {
+            console.log('CARD', card);
+            return (
+              <Card key={card.id || i} card={card} />
+            );
+          })
+        }
+      </CardsContainer>
     );
   }
 }
 
-function mapStateToProps() {
-  return {};
+function mapStateToProps(state) {
+  return {
+    cards: state.home.cards,
+  };
 }
 
 export default connect(mapStateToProps)(Cards);

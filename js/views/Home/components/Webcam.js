@@ -12,6 +12,7 @@ import { saveCard } from '../actions';
 
 import Text from '../../../primitives/Text';
 import Button from '../../../primitives/Button';
+import Toolbar from '../../../primitives/Toolbar';
 
 const states = {
   NEED_PERMISSION: 0,
@@ -56,16 +57,16 @@ class WebcamContainer extends PureComponent {
     // analyze OCR text
     analyze(OCRResults)
       .then((entities) => {
-        console.log('Got stuff', entities);
         this.props.dispatch(saveCard({
           ...this.state.meta,
-          entities,
+          entities: entities.entities,
         }));
         this.setState({
           status: states.READY,
         });
       })
       .catch((err) => {
+        console.error(err);
         this.setState({
           status: states.ERROR,
           errMsg: typeof err === 'string' ? err : 'Analysis error.',
@@ -154,7 +155,7 @@ class WebcamContainer extends PureComponent {
         break;
       }
       case states.SELECT_STREAM: {
-        statusMsg = 'Please select a camera source.';
+        statusMsg = 'Please select a camera to start scanning business cards.';
         break;
       }
       case states.ERROR: {
@@ -192,8 +193,9 @@ class WebcamContainer extends PureComponent {
           status === states.READY &&
           <View>
             <Webcam
-              height={480}
-              width={640}
+              height={288}
+              width={384}
+              style={{ alignSelf: 'center', marginBottom: 10 }}
               screenshotFormat="image/jpeg"
               ref={ref => (this.webcam = ref)}
               audio={false}
@@ -202,33 +204,33 @@ class WebcamContainer extends PureComponent {
             />
             <Button
               onPress={this.captureStream}
+              icon="camera"
             >
-              <Text>Capture</Text>
+              Capture
             </Button>
           </View>
         }
         {
           status === states.SELECT_STREAM &&
-          <View>
+          <Toolbar>
             {
               devices.map((device, i) => {
                 return (
                   <Button
                     onPress={this.selectStream(device.deviceId)}
                     key={device.deviceId}
+                    icon="camera-alt"
                   >
-                    <Text>
-                      {
-                        device.label.length
-                        ? device.label
-                        : `Video Input ${i + 1}`
-                      }
-                    </Text>
+                    {
+                      device.label.length
+                      ? device.label
+                      : `Video Input ${i + 1}`
+                    }
                   </Button>
                 );
               })
             }
-          </View>
+          </Toolbar>
         }
       </View>
     );

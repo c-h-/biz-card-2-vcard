@@ -53,32 +53,33 @@ const analyze = (OCRResults) => {
       // we gucci
       // https://developers.google.com/apis-explorer/#p/language/v1/
       console.log('Yooooo dope');
-      window.gapi.client.language.documents.analyzeEntities({
-        document: {
-          content: textBody.join(' '),
-          type: 'PLAIN_TEXT',
-        },
-      })
-      .then(checkStatus)
-      .then(parseJSON)
-      .then((results) => {
-        console.log('Entity Results', results);
-        // const entities = results.entities;
+      try {
+        window.gapi.client.language.documents.analyzeEntities({
+          document: {
+            content: textBody.join(' '),
+            type: 'PLAIN_TEXT',
+          },
+        })
+        .then(checkStatus)
+        .then(parseJSON)
+        .then((results) => {
+          console.log('Entity Results', results);
+          // const entities = results.entities;
 
-        // console.log('Entities:');
-        // entities.forEach((entity) => {
-        //   console.log(entity.name);
-        //   console.log(` - Type: ${entity.type}, Salience: ${entity.salience}`);
-        //   if (entity.metadata && entity.metadata.wikipedia_url) {
-        //     console.log(` - Wikipedia URL: ${entity.metadata.wikipedia_url}$`);
-        //   }
-        // });
-        resolve(results);
-      })
-      .catch((err) => {
-        console.error('ERROR:', err);
-        reject(err);
-      });
+          // console.log('Entities:');
+          // entities.forEach((entity) => {
+          //   console.log(entity.name);
+          //   console.log(` - Type: ${entity.type}, Salience: ${entity.salience}`);
+          //   if (entity.metadata && entity.metadata.wikipedia_url) {
+          //     console.log(` - Wikipedia URL: ${entity.metadata.wikipedia_url}$`);
+          //   }
+          // });
+          resolve(results);
+        });
+      }
+      catch (e) {
+        reject(e);
+      }
     }
     else {
       reject('Error loading gapi language client');
