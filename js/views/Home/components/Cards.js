@@ -21,7 +21,7 @@ class Cards extends Component {
     return (
       <CardsContainer>
         {
-          cards.map((card, i) => {
+          cards.reverse().map((card, i) => {
             console.log('CARD', card);
             return (
               <Card key={card.id || i} card={card} />
